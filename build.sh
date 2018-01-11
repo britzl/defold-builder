@@ -109,10 +109,13 @@ setup() {
 
 	if [ ! -z ${CHANNEL} ]; then
 		SHA1=$(curl -s http://d.defold.com/${CHANNEL}/info.json | sed 's/.*sha1": "\(.*\)".*/\1/')
+		log "Using SHA1 of latest release on channel ${CHANNEL} (SHA1: '${SHA1}')"
 	elif [ -z ${SHA1} ]; then
 		SHA1=$(curl -s http://d.defold.com/stable/info.json | sed 's/.*sha1": "\(.*\)".*/\1/')
+		log "Using SHA1 of latest stable release (SHA1: '${SHA1}')"
+	else
+		log "Using predefined SHA1 (SHA1: '${SHA1}')"
 	fi
-	log "Using engine with SHA1: '${SHA1}'"
 
 	BOB_JAR=bob_${SHA1}.jar
 	BOB_URL="http://d.defold.com/archive/${SHA1}/bob/bob.jar"
