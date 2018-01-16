@@ -144,13 +144,13 @@ resolve() {
 build() {
 	if [ -z "${PLATFORM}" ]; then usage; exit 1; fi
 	log "Building ${PLATFORM}"
-	bob --platform ${PLATFORM} ${DEBUG} ${ARCHIVE} build
+	bob --platform ${PLATFORM} ${ARCHIVE} build
 }
 
 bundle() {
 	if [ -z "${PLATFORM}" ]; then usage; exit 1; fi
 	log "Bundling ${PLATFORM}"
-	bob --platform ${PLATFORM} --bundle-output build/${PLATFORM} bundle
+	bob --platform ${PLATFORM} ${DEBUG} --bundle-output build/${PLATFORM} bundle
 }
 
 build_android() {
