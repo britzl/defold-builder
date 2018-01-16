@@ -147,30 +147,30 @@ build() {
 	bob --platform ${PLATFORM} ${ARCHIVE} build
 }
 
+build_android() {
+	bob --platform ${PLATFORM_ANDROID} ${ARCHIVE} build
+}
+
+build_ios() {
+	bob --platform ${PLATFORM_IOS} ${ARCHIVE} build
+}
+
 bundle() {
 	if [ -z "${PLATFORM}" ]; then usage; exit 1; fi
 	log "Bundling ${PLATFORM}"
 	bob --platform ${PLATFORM} ${DEBUG} --bundle-output build/${PLATFORM} bundle
 }
 
-build_android() {
-	bob --platform ${PLATFORM_ANDROID} ${DEBUG} ${ARCHIVE} build
-}
-
-build_ios() {
-	bob --platform ${PLATFORM_IOS} ${DEBUG} ${ARCHIVE} build
-}
-
 bundle_android() {
 	if [ -z "${CERTIFICATE}" ]; then usage; exit 1; fi
 	if [ -z "${PRIVATEKEY}" ]; then usage; exit 1; fi
-	bob --platform ${PLATFORM_ANDROID} --bundle-output build/${PLATFORM_ANDROID} --certificate "${CERTIFICATE}" --private-key "${PRIVATEKEY}" bundle
+	bob --platform ${PLATFORM_ANDROID} ${DEBUG} --bundle-output build/${PLATFORM_ANDROID} --certificate "${CERTIFICATE}" --private-key "${PRIVATEKEY}" bundle
 }
 
 bundle_ios() {
 	if [ -z "${MOBILEPROVISIONING}" ]; then usage; exit 1; fi
 	if [ -z "${IDENTITY}" ]; then usage; exit 1; fi
-	bob --platform ${PLATFORM_IOS} --bundle-output build/${PLATFORM_IOS} --mobileprovisioning "${MOBILEPROVISIONING}" --identity "${IDENTITY}" bundle
+	bob --platform ${PLATFORM_IOS} ${DEBUG} --bundle-output build/${PLATFORM_IOS} --mobileprovisioning "${MOBILEPROVISIONING}" --identity "${IDENTITY}" bundle
 }
 
 
