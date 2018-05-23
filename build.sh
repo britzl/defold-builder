@@ -2,7 +2,9 @@
 
 usage()
 {
-	echo "Wrapper for downloading and using bob.jar
+	echo "
+Wrapper for downloading and using bob.jar
+Get the latest version of this script from https://github.com/britzl/defold-builder
 
 usage: build.sh [options] [command ...]
 
