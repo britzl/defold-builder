@@ -20,7 +20,8 @@ options:
 	--channel                         (alpha|beta|stable) Get SHA1 of engine from latest
 	-p | --platform                   (string) Platform to build for
 	-a | --archive                    Create archive when building
-	-d | --debug                      Create debug build
+	-d | --debug                      Create debug build (deprecated: will set variant to debug)
+	-V | --variant                    (string) Build variant (headless, debug or release)
 	-v | --verbose                    Show verbose output from bob.jar
 	--log                             Show verbose output this script
 
@@ -42,7 +43,7 @@ log() {
 	fi
 }
 
-
+VARIANT="release"
 while [ "$1" != "" ]; do
 	PARAM=`echo $1 | awk -F= '{print $1}'`
 	VALUE=`echo $1 | awk -F= '{print $2}'`
@@ -85,7 +86,10 @@ while [ "$1" != "" ]; do
 			ARCHIVE="${PARAM}"
 			;;
 		-d | --debug)
-			DEBUG="${PARAM}"
+			VARIANT="debug"
+			;;
+		-V | --variant)
+			VARIANT="${VALUE}"
 			;;
 		-v | --verbose)
 			VERBOSE="${PARAM}"
@@ -160,19 +164,19 @@ build_ios() {
 bundle() {
 	if [ -z "${PLATFORM}" ]; then usage; exit 1; fi
 	log "Bundling ${PLATFORM}"
-	bob --platform ${PLATFORM} ${DEBUG} --bundle-output build/${PLATFORM} bundle
+	bob --platform ${PLATFORM} --variant ${VARIANT} --bundle-output build/${PLATFORM} bundle
 }
 
 bundle_android() {
 	if [ -z "${CERTIFICATE}" ]; then usage; exit 1; fi
 	if [ -z "${PRIVATEKEY}" ]; then usage; exit 1; fi
-	bob --platform ${PLATFORM_ANDROID} ${DEBUG} --bundle-output build/${PLATFORM_ANDROID} --certificate "${CERTIFICATE}" --private-key "${PRIVATEKEY}" bundle
+	bob --platform ${PLATFORM_ANDROID} --variant ${VARIANT} --bundle-output build/${PLATFORM_ANDROID} --certificate "${CERTIFICATE}" --private-key "${PRIVATEKEY}" bundle
 }
 
 bundle_ios() {
 	if [ -z "${MOBILEPROVISIONING}" ]; then usage; exit 1; fi
 	if [ -z "${IDENTITY}" ]; then usage; exit 1; fi
-	bob --platform ${PLATFORM_IOS} ${DEBUG} --bundle-output build/${PLATFORM_IOS} --mobileprovisioning "${MOBILEPROVISIONING}" --identity "${IDENTITY}" bundle
+	bob --platform ${PLATFORM_IOS} --variant ${VARIANT} --bundle-output build/${PLATFORM_IOS} --mobileprovisioning "${MOBILEPROVISIONING}" --identity "${IDENTITY}" bundle
 }
 
 
