@@ -1,0 +1,24 @@
+[project]
+title = builder
+dependencies = 
+
+[bootstrap]
+main_collection = /testapp/testapp.collectionc
+
+[display]
+width = 640
+height = 1136
+variable_dt = 1
+
+[script]
+shared_state = 1
+
+[ios]
+bundle_identifier = com.defold.builder
+
+[osx]
+bundle_identifier = com.defold.builder
+
+[android]
+package = com.defold.builder
+
