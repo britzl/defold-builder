@@ -155,15 +155,15 @@ resolve() {
 build() {
 	if [ -z "${PLATFORM}" ]; then usage; exit 1; fi
 	log "Building ${PLATFORM}"
-	bob --platform ${PLATFORM} ${ARCHIVE} build
+	bob --platform ${PLATFORM} --variant ${VARIANT} ${ARCHIVE} build
 }
 
 build_android() {
-	bob --platform ${PLATFORM_ANDROID} ${ARCHIVE} build
+	bob --platform ${PLATFORM_ANDROID} --variant ${VARIANT} ${ARCHIVE} build
 }
 
 build_ios() {
-	bob --platform ${PLATFORM_IOS} ${ARCHIVE} build
+	bob --platform ${PLATFORM_IOS} --variant ${VARIANT} ${ARCHIVE} build
 }
 
 bundle() {
