@@ -44,6 +44,10 @@ log() {
 	fi
 }
 
+err() {
+	echo "ERROR: $@"
+}
+
 VARIANT="release"
 STRIP_EXECUTABLE=""
 while [ "$1" != "" ]; do
@@ -104,7 +108,7 @@ while [ "$1" != "" ]; do
 			;;
 
 		*)
-			echo "ERROR: unknown parameter \"$PARAM\""
+			echo "unknown parameter \"$PARAM\""
 			usage
 			exit 1
 			;;
@@ -146,14 +150,14 @@ clean() {
 }
 
 resolve() {
-	if [ -z "${EMAIL}" ]; then usage; exit 1; fi
-	if [ -z "${AUTH}" ]; then usage; exit 1; fi
+	if [ -z "${EMAIL}" ]; then usage; err "Missing email"; exit 1; fi
+	if [ -z "${AUTH}" ]; then usage; err "Missing auth"; exit 1; fi
 	log "Resolving dependencies"
 	bob --email "${EMAIL}" --auth "${AUTH}" resolve
 }
 
 build() {
-	if [ -z "${PLATFORM}" ]; then usage; exit 1; fi
+	if [ -z "${PLATFORM}" ]; then usage; err "Missing platform"; exit 1; fi
 	log "Building ${PLATFORM}"
 	bob --platform ${PLATFORM} --variant ${VARIANT} ${ARCHIVE} build
 }
@@ -167,20 +171,20 @@ build_ios() {
 }
 
 bundle() {
-	if [ -z "${PLATFORM}" ]; then usage; exit 1; fi
+	if [ -z "${PLATFORM}" ]; then usage; err "Missing platform"; exit 1; fi
 	log "Bundling ${PLATFORM}"
 	bob --platform ${PLATFORM} --variant ${VARIANT} ${STRIP_EXECUTABLE} --bundle-output build/${PLATFORM} bundle
 }
 
 bundle_android() {
-	if [ -z "${CERTIFICATE}" ]; then usage; exit 1; fi
-	if [ -z "${PRIVATEKEY}" ]; then usage; exit 1; fi
+	if [ -z "${CERTIFICATE}" ]; then usage; err "Missing certificate"; exit 1; fi
+	if [ -z "${PRIVATEKEY}" ]; then usage; err "Missing key"; exit 1; fi
 	bob --platform ${PLATFORM_ANDROID} --variant ${VARIANT} ${STRIP_EXECUTABLE} --bundle-output build/${PLATFORM_ANDROID} --certificate "${CERTIFICATE}" --private-key "${PRIVATEKEY}" bundle
 }
 
 bundle_ios() {
-	if [ -z "${MOBILEPROVISIONING}" ]; then usage; exit 1; fi
-	if [ -z "${IDENTITY}" ]; then usage; exit 1; fi
+	if [ -z "${MOBILEPROVISIONING}" ]; then usage; err "Missing mobile provisioning"; exit 1; fi
+	if [ -z "${IDENTITY}" ]; then usage; err "Missing signing identity"; exit 1; fi
 	bob --platform ${PLATFORM_IOS} --variant ${VARIANT} ${STRIP_EXECUTABLE} --bundle-output build/${PLATFORM_IOS} --mobileprovisioning "${MOBILEPROVISIONING}" --identity "${IDENTITY}" bundle
 }
 
