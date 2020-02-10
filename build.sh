@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 usage()
 {
 	echo "
@@ -18,6 +20,8 @@ options:
 	-pk | --private-key               (string) Private key to use when bundling for Android
 	--sha1                 	          (string) SHA1 of engine to use
 	--channel                         (alpha|beta|stable) Get SHA1 of engine from latest
+	--build-server                    (string) default is https://build.defold.com
+	--with-symbols                    Enables a build with debug symbols (for apps using native extensions)
 	-p | --platform                   (string) Platform to build for
 	-a | --archive                    Create archive when building
 	-d | --debug                      Create debug build (deprecated: will set variant to debug)
@@ -49,6 +53,7 @@ err() {
 }
 
 VARIANT="release"
+BUILD_SERVER="https://build.defold.com"
 STRIP_EXECUTABLE=""
 while [ "$1" != "" ]; do
 	PARAM=`echo $1 | awk -F= '{print $1}'`
@@ -84,6 +89,12 @@ while [ "$1" != "" ]; do
 			;;
 		--channel)
 			CHANNEL="${VALUE}"
+			;;
+		--build-server)
+			BUILD_SERVER=="${VALUE}"
+			;;
+		--with-symbols)
+			WITH_SYMBOLS=="${PARAM}"
 			;;
 		-p | --platform)
 			PLATFORM="${VALUE}"
@@ -142,7 +153,7 @@ setup() {
 
 bob() {
 	log "bob $@"
-	java -Djava.ext.dirs=${JAVA_HOME}/jre/lib/ext -jar ${BOB_JAR} ${VERBOSE} "$@"
+	java -jar ${BOB_JAR} ${VERBOSE} "$@"
 }
 
 clean() {
@@ -159,15 +170,15 @@ resolve() {
 build() {
 	if [ -z "${PLATFORM}" ]; then usage; err "Missing platform"; exit 1; fi
 	log "Building ${PLATFORM}"
-	bob --platform ${PLATFORM} --variant ${VARIANT} ${ARCHIVE} build
+	bob --platform ${PLATFORM} --variant ${VARIANT} ${ARCHIVE} --build-server=${BUILD_SERVER} ${WITH_SYMBOLS} build
 }
 
 build_android() {
-	bob --platform ${PLATFORM_ANDROID} --variant ${VARIANT} ${ARCHIVE} build
+	bob --platform ${PLATFORM_ANDROID} --variant ${VARIANT} ${ARCHIVE} --build-server=${BUILD_SERVER} ${WITH_SYMBOLS} build
 }
 
 build_ios() {
-	bob --platform ${PLATFORM_IOS} --variant ${VARIANT} ${ARCHIVE} build
+	bob --platform ${PLATFORM_IOS} --variant ${VARIANT} ${ARCHIVE} --build-server=${BUILD_SERVER} ${WITH_SYMBOLS} build
 }
 
 bundle() {
