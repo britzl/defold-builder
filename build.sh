@@ -151,7 +151,7 @@ setup() {
 
 bob() {
 	log "bob $@"
-	java -Djava.ext.dirs=${JAVA_HOME}/jre/lib/ext -jar ${BOB_JAR} ${VERBOSE} "$@"
+	java -jar ${BOB_JAR} ${VERBOSE} "$@"
 }
 
 clean() {
