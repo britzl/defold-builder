@@ -147,7 +147,7 @@ setup() {
 	BOB_URL="http://d.defold.com/archive/${SHA1}/bob/bob.jar"
 	if [ ! -f ${BOB_JAR} ]; then
 		log "Downloading ${BOB_URL}"
-		curl -o ${BOB_JAR} ${BOB_URL}
+		curl -L -o ${BOB_JAR} ${BOB_URL}
 	fi
 }
 
